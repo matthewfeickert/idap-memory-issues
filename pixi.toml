@@ -38,14 +38,17 @@ jupyterlab = ">=4.1.6,<4.2"
 notebook = ">=7.1.3,<7.2"
 pyyaml = ">=6.0.1,<6.1"
 
-[feature.mprof]
-dependencies = {matplotlib = ">=3.8.4,<3.9"}
-pypi-dependencies = {memory-profiler = { version = "==0.61.0" }}
+[feature.mprof.dependencies]
+matplotlib = ">=3.8.4,<3.9"
 
-tasks = {mprof = """
-mprof run examples/uproot_dask_memory_alex.py && \
-mprof plot
-"""}
+[feature.mprof.pypi-dependencies]
+memory-profiler = { version = "==0.61.0" }
+
+[feature.mprof.tasks]
+mprof = """
+mprof run examples/uproot_dask_memory.py && \
+mprof plot --output figures/uproot_dask_memory_mprof.png
+"""
 
 [feature.memray.dependencies]
 memray = ">=1.12.0,<1.13"
