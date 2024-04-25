@@ -4455,8 +4455,8 @@ packages:
   license: Apache-2.0
   license_family: Apache
   purls:
-  - pkg:pypi/html5lib
   - pkg:pypi/bleach
+  - pkg:pypi/html5lib
   size: 131220
   timestamp: 1696630354218
 - kind: conda
