@@ -12,6 +12,10 @@ alex = """
 python examples/uproot_dask_memory_alex.py
 """
 
+uproot-open = """
+python examples/uproot_open_alex.py
+"""
+
 lindsey = """
 python examples/dask_awkward_memory_lindsey.py
 """

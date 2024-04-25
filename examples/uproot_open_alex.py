@@ -114,5 +114,5 @@ if __name__ == "__main__":
             arr = read_file["CollectionTree"][branch].array()
 
         print(
-            f"total read: {read_file.file.source.num_requested_bytes / 1000**2:.2f} MB"
+            f"\n# total read: {read_file.file.source.num_requested_bytes / 1000**2:.2f} MB"
         )
