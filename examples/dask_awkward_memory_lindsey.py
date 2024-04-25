@@ -1,6 +1,6 @@
-import distributed
 import dask.array as da
 import dask_awkward as dak
+import distributed
 
 if __name__ == "__main__":
     with distributed.Client() as _:
