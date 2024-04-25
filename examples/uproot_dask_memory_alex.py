@@ -1,5 +1,7 @@
 import gc
 import warnings
+from pathlib import Path
+
 import awkward as ak
 import uproot
 
@@ -64,9 +66,21 @@ def materialize_branches(events):
 if __name__ == "__main__":
     filter_name = lambda b: b in BRANCH_LIST
 
-    # download input file:
-    # curl -sLO https://cernbox.cern.ch/remote.php/dav/public-files/BPIO76iUaeYuhaF/DAOD_PHYSLITE.37233417._000052.pool.root.1
-    fname = "DAOD_PHYSLITE.37233417._000052.pool.root.1"
-    events = uproot.dask({fname: "CollectionTree"}, filter_name=filter_name)
+    data_dir = Path("/tmp") / "data"
+    if not data_dir.exists():
+        data_dir.mkdir()
+
+    example_file = data_dir / "DAOD_PHYSLITE.37233417._000052.pool.root.1"
+
+    if not (example_file).exists():
+        import urllib.request
+
+        urllib.request.urlretrieve(
+            "https://cernbox.cern.ch/remote.php/dav/public-files/BPIO76iUaeYuhaF/DAOD_PHYSLITE.37233417._000052.pool.root.1",
+            example_file,
+        )
+
+    file_name = example_file.name
+    events = uproot.dask({file_name: "CollectionTree"}, filter_name=filter_name)
     task = materialize_branches(events)
     task["_counter"].compute()
