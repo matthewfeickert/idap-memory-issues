@@ -1,4 +1,3 @@
-import gc
 import warnings
 from pathlib import Path
 
@@ -107,8 +106,6 @@ def materialize_branches(events):
 
 
 if __name__ == "__main__":
-    filter_name = lambda b: b in BRANCH_LIST
-
     data_dir = Path("/tmp") / "data"
     if not data_dir.exists():
         data_dir.mkdir()
@@ -123,6 +120,7 @@ if __name__ == "__main__":
             example_file,
         )
 
+    filter_name = lambda branch: branch in BRANCH_LIST  # noqa: E731
     events = uproot.dask({example_file: "CollectionTree"}, filter_name=filter_name)
     task = materialize_branches(events)
     task["_counter"].compute()
