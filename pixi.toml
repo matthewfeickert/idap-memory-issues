@@ -16,6 +16,11 @@ lindsey = """
 python examples/dask_awkward_memory_lindsey.py
 """
 
+mprof = """
+mprof run examples/uproot_dask_memory_alex.py && \
+mprof plot
+"""
+
 [dependencies]
 python = "==3.9.12"
 uproot = ">=5.3.3,<5.4"
@@ -24,6 +29,7 @@ distributed = ">=2024.4.2,<2024.5"
 dask-awkward = ">=2024.3.0,<2024.4"
 jupyterlab = ">=4.1.6,<4.2"
 notebook = ">=7.1.3,<7.2"
+matplotlib = ">=3.8.4,<3.9"
 
 [pypi-dependencies]
 memory-profiler = { version = "==0.61.0" }
