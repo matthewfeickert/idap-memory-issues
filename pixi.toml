@@ -9,15 +9,15 @@ platforms = ["linux-64", "osx-arm64", "osx-64"]
 [tasks]
 
 alex = """
-python examples/uproot_dask_memory_alex.py
+python examples/uproot_dask_memory.py
 """
 
 uproot-open = """
-python examples/uproot_open_alex.py
+python examples/uproot_open.py
 """
 
 lindsey = """
-python examples/dask_awkward_memory_lindsey.py
+python examples/dask_awkward_memory.py
 """
 
 memory-issue-uproot-dask = """
