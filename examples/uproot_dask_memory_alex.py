@@ -80,7 +80,6 @@ if __name__ == "__main__":
             example_file,
         )
 
-    file_name = example_file.name
-    events = uproot.dask({file_name: "CollectionTree"}, filter_name=filter_name)
+    events = uproot.dask({example_file: "CollectionTree"}, filter_name=filter_name)
     task = materialize_branches(events)
     task["_counter"].compute()
