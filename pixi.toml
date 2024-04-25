@@ -53,8 +53,19 @@ mprof plot --output figures/uproot_dask_memory_mprof.png
 [feature.memray.dependencies]
 memray = ">=1.12.0,<1.13"
 
+[feature.memray.tasks]
+memray-uproot-dask = """
+memray run --output memray_output/uproot_dask.bin examples/uproot_dask_memory.py && \
+memray flamegraph memray_output/uproot_dask.bin
+"""
+
 [feature.scalene.dependencies]
 scalene = ">=1.5.39,<1.6"
+
+[feature.scalene.tasks]
+scalene-uproot-dask = """
+scalene examples/uproot_dask_memory.py
+"""
 
 [environments]
 # all environments include the default feature
