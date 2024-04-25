@@ -109,10 +109,15 @@ if __name__ == "__main__":
     filter_name = lambda branch: branch in BRANCH_LIST  # noqa: E731
 
     with uproot.open(all_files[0], filter_name=filter_name) as read_file:
+        uncompressed_total = []
         for branch in BRANCH_LIST:
-            print(branch)
-            arr = read_file["CollectionTree"][branch].array()
+            # print(branch)
+            file_branch = read_file["CollectionTree"][branch]
+            _ = file_branch.array()
+
+            uncompressed_total.append(file_branch.uncompressed_bytes)
 
         print(
-            f"\n# total read: {read_file.file.source.num_requested_bytes / 1000**2:.2f} MB"
+            f"# total read: {read_file.file.source.num_requested_bytes / 1000**2:.2f} MB"
         )
+        print(f"# uncompressed total: {sum(uncompressed_total) / 1000**2:.2f} MB")
