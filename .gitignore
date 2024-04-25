@@ -162,5 +162,9 @@ cython_debug/
 .pixi
 *.egg-info
 
-# Ignore .dat files
+# Ignore output files
 *.dat
+*.png
+output/
+profile.html
+profile.json
