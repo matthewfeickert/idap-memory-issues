@@ -55,8 +55,8 @@ memray = ">=1.12.0,<1.13"
 
 [feature.memray.tasks]
 memray-uproot-dask = """
-memray run --output memray_output/uproot_dask.bin examples/uproot_dask_memory.py && \
-memray flamegraph memray_output/uproot_dask.bin
+memray run --output output/uproot_dask.bin examples/uproot_dask_memory.py && \
+memray flamegraph output/uproot_dask.bin
 """
 
 [feature.scalene.dependencies]
@@ -64,7 +64,7 @@ scalene = ">=1.5.39,<1.6"
 
 [feature.scalene.tasks]
 scalene-uproot-dask = """
-scalene examples/uproot_dask_memory.py
+scalene --outfile output/uproot_dask_scalene.html examples/uproot_dask_memory.py
 """
 
 [environments]
