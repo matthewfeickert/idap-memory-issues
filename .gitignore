@@ -162,5 +162,6 @@ cython_debug/
 .pixi
 *.egg-info
 
-# Ignore .dat files
+# Ignore .dat files and other output
 *.dat
+output/
