@@ -20,6 +20,14 @@ lindsey = """
 python examples/dask_awkward_memory_lindsey.py
 """
 
+memory-issue-uproot-dask = """
+python examples/run_memory_issue_uproot_dask.py
+"""
+
+memory-issue-uproot = """
+python examples/run_memory_issue_uproot.py
+"""
+
 [dependencies]
 python = "==3.9.12"
 uproot = ">=5.3.3,<5.4"
