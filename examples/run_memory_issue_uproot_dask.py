@@ -7,6 +7,7 @@ from pathlib import Path
 import awkward as ak
 import psutil
 import uproot
+import yaml
 
 process = psutil.Process()
 
@@ -33,90 +34,12 @@ print(
 warnings.filterwarnings("ignore")
 
 
-BRANCH_LIST = [
-    "AnalysisJetsAuxDyn.pt",
-    "AnalysisJetsAuxDyn.eta",
-    "AnalysisJetsAuxDyn.phi",
-    "AnalysisJetsAuxDyn.m",
-    "AnalysisElectronsAuxDyn.pt",
-    "AnalysisElectronsAuxDyn.eta",
-    "AnalysisElectronsAuxDyn.phi",
-    "AnalysisElectronsAuxDyn.m",
-    "AnalysisMuonsAuxDyn.pt",
-    "AnalysisMuonsAuxDyn.eta",
-    "AnalysisMuonsAuxDyn.phi",
-    "AnalysisJetsAuxDyn.EnergyPerSampling",
-    "AnalysisJetsAuxDyn.SumPtTrkPt500",
-    "AnalysisJetsAuxDyn.TrackWidthPt1000",
-    "PrimaryVerticesAuxDyn.z",
-    "PrimaryVerticesAuxDyn.x",
-    "PrimaryVerticesAuxDyn.y",
-    "AnalysisJetsAuxDyn.NumTrkPt500",
-    "AnalysisJetsAuxDyn.NumTrkPt1000",
-    "AnalysisJetsAuxDyn.SumPtChargedPFOPt500",
-    "AnalysisJetsAuxDyn.Timing",
-    "AnalysisJetsAuxDyn.JetConstitScaleMomentum_eta",
-    "AnalysisJetsAuxDyn.ActiveArea4vec_eta",
-    "AnalysisJetsAuxDyn.DetectorEta",
-    "AnalysisJetsAuxDyn.JetConstitScaleMomentum_phi",
-    "AnalysisJetsAuxDyn.ActiveArea4vec_phi",
-    "AnalysisJetsAuxDyn.JetConstitScaleMomentum_m",
-    "AnalysisJetsAuxDyn.JetConstitScaleMomentum_pt",
-    "AnalysisJetsAuxDyn.EMFrac",
-    "AnalysisJetsAuxDyn.Width",
-    "AnalysisJetsAuxDyn.ActiveArea4vec_m",
-    "AnalysisJetsAuxDyn.ActiveArea4vec_pt",
-    "AnalysisJetsAuxDyn.DFCommonJets_QGTagger_TracksWidth",
-    "AnalysisJetsAuxDyn.PSFrac",
-    "AnalysisJetsAuxDyn.JVFCorr",
-    "AnalysisJetsAuxDyn.DFCommonJets_QGTagger_TracksC1",
-    "AnalysisJetsAuxDyn.DFCommonJets_fJvt",
-    "AnalysisJetsAuxDyn.DFCommonJets_QGTagger_NTracks",
-    "AnalysisJetsAuxDyn.GhostMuonSegmentCount",
-    "AnalysisMuonsAuxDyn.momentumBalanceSignificance",
-    "AnalysisMuonsAuxDyn.topoetcone20_CloseByCorr",
-    "AnalysisMuonsAuxDyn.scatteringCurvatureSignificance",
-    "AnalysisMuonsAuxDyn.scatteringNeighbourSignificance",
-    "AnalysisMuonsAuxDyn.neflowisol20_CloseByCorr",
-    "AnalysisMuonsAuxDyn.topoetcone20",
-    "AnalysisMuonsAuxDyn.topoetcone30",
-    "AnalysisMuonsAuxDyn.topoetcone40",
-    "AnalysisMuonsAuxDyn.neflowisol20",
-    "AnalysisMuonsAuxDyn.segmentDeltaEta",
-    "AnalysisMuonsAuxDyn.DFCommonJetDr",
-    "AnalysisMuonsAuxDyn.InnerDetectorPt",
-    "AnalysisMuonsAuxDyn.MuonSpectrometerPt",
-    "AnalysisMuonsAuxDyn.spectrometerFieldIntegral",
-    "AnalysisMuonsAuxDyn.EnergyLoss",
-    "AnalysisJetsAuxDyn.NNJvtPass",
-    "AnalysisElectronsAuxDyn.topoetcone20_CloseByCorr",
-    "AnalysisElectronsAuxDyn.topoetcone20ptCorrection",
-    "AnalysisElectronsAuxDyn.topoetcone20",
-    "AnalysisMuonsAuxDyn.ptvarcone30_Nonprompt_All_MaxWeightTTVA_pt500_CloseByCorr",
-    "AnalysisElectronsAuxDyn.DFCommonElectronsECIDSResult",
-    "AnalysisElectronsAuxDyn.neflowisol20",
-    "AnalysisMuonsAuxDyn.ptvarcone30_Nonprompt_All_MaxWeightTTVA_pt500",
-    "AnalysisMuonsAuxDyn.ptcone40",
-    "AnalysisMuonsAuxDyn.ptvarcone30_Nonprompt_All_MaxWeightTTVA_pt1000_CloseByCorr",
-    "AnalysisMuonsAuxDyn.ptvarcone30_Nonprompt_All_MaxWeightTTVA_pt1000",
-    "AnalysisMuonsAuxDyn.ptvarcone40",
-    "AnalysisElectronsAuxDyn.f1",
-    "AnalysisMuonsAuxDyn.ptcone20_Nonprompt_All_MaxWeightTTVA_pt500",
-    "PrimaryVerticesAuxDyn.vertexType",
-    "AnalysisMuonsAuxDyn.ptvarcone30",
-    "AnalysisMuonsAuxDyn.ptcone30",
-    "AnalysisMuonsAuxDyn.ptcone20_Nonprompt_All_MaxWeightTTVA_pt1000",
-    "AnalysisElectronsAuxDyn.ptvarcone30_Nonprompt_All_MaxWeightTTVALooseCone_pt500",
-    "AnalysisMuonsAuxDyn.CaloLRLikelihood",
-]
-
-
-def materialize_branches(events):
+def materialize_branches(events, branch_list):
     num_events = ak.num(events, axis=0)  # track number of events
 
     _counter = 0
     # see https://github.com/dask-contrib/dask-awkward/issues/499 for context
-    for branch in BRANCH_LIST:
+    for branch in branch_list:
         _counter_to_add = ak.count_nonzero(events[branch], axis=-1)  # reduce innermost
 
         # reduce >2-dimensional (per event) branches further
@@ -131,9 +54,11 @@ def materialize_branches(events):
     return {"nevts": num_events, "_counter": _counter}
 
 
-def everything(file_name, filter_name):
-    events = uproot.dask({file_name: "CollectionTree"}, filter_name=filter_name)
-    task = materialize_branches(events)
+def everything(file_name, branch_list):
+    events = uproot.dask(
+        {file_name: "CollectionTree"}, filter_name=lambda branch: branch in branch_list
+    )
+    task = materialize_branches(events, branch_list)
     task["_counter"].compute()
 
 
@@ -153,14 +78,15 @@ if __name__ == "__main__":
             example_file,
         )
 
-    filter_name = lambda branch: branch in BRANCH_LIST  # noqa: E731
+    with open("branch_list.yml") as read_file:
+        branch_list = yaml.safe_load(read_file)["branch_list"]
 
     for i in range(10):
         gc.collect()
         print(
             f"begin {i} RSS: {process.memory_full_info().rss / 1024**2:.0f} USS: {process.memory_full_info().uss / 1024**2:.0f} MB"
         )
-        everything(example_file, filter_name)
+        everything(example_file, branch_list)
 
     gc.collect()
     print(
